@@ -11,7 +11,8 @@ def status():
 
 @app.route('/live_image')
 def live_image():
-    camera.bindImageStream("http://192.168.1.22:8081/?action=snapshot")
+    #camera.bindImageStream("http://192.168.1.22:8081/?action=snapshot")
+    camera.bindVideoStream(0)
     rslt, img = camera.getFrame(".jpg")
     if(rslt == camera.STATUS_OK):
         return Response(b'--frame\r\n' + b'Content-Type: image/jpg\r\n\r\n' + img.tobytes() + b'\r\n\r\n', 
@@ -19,11 +20,5 @@ def live_image():
     else:
         return send_file('static/no-image.png', mimetype='image/png')
 
-
-# @app.route('/video_feed')
-# def video_feed():
-#     return Response(gen(VideoCamera()),
-#                     mimetype='multipart/x-mixed-replace; boundary=frame')
-
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', port=8080, debug=True)

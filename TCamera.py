@@ -36,9 +36,10 @@ class Camera:
     def bindVideoStream(self, source):
         self.videoStream = True
         self.imageStream = False
+        self.source = source
         self.video = cv2.VideoCapture(self.source)
         if(self.verbose):
-            print("Camera::bindVideoStream() to " + self.source)
+            print("Camera::bindVideoStream() to " + str(self.source))
     
     def releaseVideoStream(self):
         self.video.release()
