@@ -25,6 +25,8 @@ class Camera:
         self.verbose = verbose
         self.videoStream = False
         self.imageStream = False
+        if(self.verbose):
+            print("Camera::__init__ with verbose=" + str(self.verbose))
         #self.video = cv2.VideoCapture(self.source)
     
     def __del__(self):
@@ -36,12 +38,12 @@ class Camera:
         self.imageStream = False
         self.video = cv2.VideoCapture(self.source)
         if(self.verbose):
-            print("bindVideoStream() to " + self.source)
+            print("Camera::bindVideoStream() to " + self.source)
     
     def releaseVideoStream(self):
         self.video.release()
         if(self.verbose):
-            print("releaseVideoStream() released")
+            print("Camera::releaseVideoStream() released")
     
     def bindImageStream(self, url):
     	# download the image, convert it to a NumPy array, and then read
@@ -50,7 +52,7 @@ class Camera:
         self.imageStream = True
         self.url = url
         if(self.verbose):
-            print("bindImageStream() to " + self.url)
+            print("Camera::bindImageStream() to " + self.url)
 
     def getFrame(self, extension):
         if(extension in Camera.FileExtensionAvailable == False):
@@ -61,23 +63,24 @@ class Camera:
             if(status == True):                    
                 status, image = cv2.imencode("." + extension, image)
                 if(self.verbose):
-                    print("getFrame() from videoStream encoded to " + self.extension)
+                    print("Camera::getFrame() from videoStream encoded to " + extension)
                 return Camera.STATUS_OK, image
             else:
                 if(self.verbose):
-                    print("getFrame() from videoStream fails to encode image")
+                    print("Camera::getFrame() from videoStream fails to encode image")
                 return Camera.SOURCE_NOT_FOUND, None
-        elif(self.imageStream == True):            
+        elif(self.imageStream == True):                        
             try:
                 resp = urllib.urlopen(self.url, timeout=1)
             except urllib.URLError:
                 if(self.verbose):
-                    print("getFrame() from imageStream fails to open url, timedout")
+                    print("Camera::getFrame() from imageStream fails to open url, timedout")
                 return Camera.URL_OPEN_TIMED_OUT, None
             image = np.asarray(bytearray(resp.read()), dtype="uint8")
             image = cv2.imdecode(image, cv2.IMREAD_COLOR)   
+            status, image = cv2.imencode("." + extension, image)
             if(self.verbose):
-                print("getFrame() from imageStream done")   
+                print("Camera::getFrame() from videoStream encoded to " + extension)
             return Camera.STATUS_OK, image
         else:
             return Camera.NO_STREAM_BINDED, None
@@ -95,10 +98,10 @@ class Camera:
         status = cv2.imwrite(filename, image)
         if(status == True):
             if(self.verbose):
-                print("saveImage() done, filename=" + filename)
+                print("Camera::saveImage() done, filename=" + filename)
             return Camera.STATUS_OK
         else:
             if(self.verbose):
-                print("saveImage() fails")
+                print("Camera::saveImage() fails")
             return Camera.FAIL_TO_SAVE
                 
