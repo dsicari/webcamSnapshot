@@ -4,8 +4,6 @@ import cv2
 import numpy as np
 import urllib.request as urllib
 
-import TUtil as utl 
-
 class Camera:
     
     # Status

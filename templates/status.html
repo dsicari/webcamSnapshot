@@ -3,7 +3,9 @@
     <title>Video Streaming Demonstration</title>
   </head>
   <body>
-    <h1>Video Streaming Demonstration</h1>
-    <img id="bg" src="{{ url_for('live_image') }}">
+    <h1>Image raw binary</h1>
+    <img id="bg" src="{{ url_for('live_image', format='raw') }}">
+    <h1>Image base64</h1>
+    <img id="bg" src="{{ url_for('live_image', format='base64') }}">
   </body>
 </html>
